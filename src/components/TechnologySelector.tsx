@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, X, Play } from 'lucide-react';
+import { Search, X, Play, Check } from 'lucide-react';
 import { technologies, Technology } from '@/data/technologies';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,7 @@ const TechnologySelector: React.FC<TechnologySelectorProps> = ({ onStartAnimatio
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTechs, setSelectedTechs] = useState<Technology[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [pendingSelections, setPendingSelections] = useState<Set<string>>(new Set());
 
   // Filter technologies based on search term
   const filteredTechs = useMemo(() => {
@@ -23,16 +24,30 @@ const TechnologySelector: React.FC<TechnologySelectorProps> = ({ onStartAnimatio
     );
   }, [searchTerm]);
 
-  // Add technology to selection
-  const addTechnology = (tech: Technology) => {
-    if (!selectedTechs.find(t => t.id === tech.id)) {
-      setSelectedTechs(prev => [...prev, tech]);
+  // Toggle technology selection in the picker (multi-select)
+  const toggleTechnologySelection = (tech: Technology) => {
+    const newPendingSelections = new Set(pendingSelections);
+    if (newPendingSelections.has(tech.id)) {
+      newPendingSelections.delete(tech.id);
+    } else {
+      newPendingSelections.add(tech.id);
     }
+    setPendingSelections(newPendingSelections);
+  };
+
+  // Add selected technologies from picker to main selection
+  const addPendingSelections = () => {
+    const techsToAdd = technologies.filter(tech => 
+      pendingSelections.has(tech.id) && !selectedTechs.find(t => t.id === tech.id)
+    );
+    
+    setSelectedTechs(prev => [...prev, ...techsToAdd]);
+    setPendingSelections(new Set());
     setSearchTerm('');
     setShowSuggestions(false);
   };
 
-  // Remove technology from selection
+  // Remove technology from main selection
   const removeTechnology = (techId: string) => {
     setSelectedTechs(prev => prev.filter(t => t.id !== techId));
   };
@@ -41,6 +56,7 @@ const TechnologySelector: React.FC<TechnologySelectorProps> = ({ onStartAnimatio
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setShowSuggestions(e.target.value.length > 0);
+    setPendingSelections(new Set()); // Clear pending selections when search changes
   };
 
   // Handle start animation
@@ -50,6 +66,14 @@ const TechnologySelector: React.FC<TechnologySelectorProps> = ({ onStartAnimatio
       const sortedTechs = [...selectedTechs].sort((a, b) => a.year - b.year);
       onStartAnimation(sortedTechs);
     }
+  };
+
+  // Clear all selections
+  const clearAllSelections = () => {
+    setSelectedTechs([]);
+    setPendingSelections(new Set());
+    setSearchTerm('');
+    setShowSuggestions(false);
   };
 
   // Get era color for technology pill
@@ -75,7 +99,7 @@ const TechnologySelector: React.FC<TechnologySelectorProps> = ({ onStartAnimatio
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl">
           Create your personalized journey through the evolution of programming technologies.
-          Select the technologies that shaped your career and watch them come alive in a stunning timeline animation.
+          Select multiple technologies that shaped your career and watch them come alive in a stunning timeline animation.
         </p>
       </div>
 
@@ -85,28 +109,82 @@ const TechnologySelector: React.FC<TechnologySelectorProps> = ({ onStartAnimatio
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
           <Input
             type="text"
-            placeholder="Search technologies (e.g., React, Python, Java)..."
+            placeholder="Search technologies (e.g., React, Python, Java)... Select multiple and add them together"
             value={searchTerm}
             onChange={handleSearchChange}
             onFocus={() => setShowSuggestions(searchTerm.length > 0)}
             className="pl-12 pr-4 py-6 text-lg glass-card border-primary/20 focus:border-primary/40"
           />
+          {pendingSelections.size > 0 && (
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-sm text-primary">
+              {pendingSelections.size} selected
+            </div>
+          )}
         </div>
 
-        {/* Technology Suggestions */}
+        {/* Technology Suggestions with Multi-Select */}
         {showSuggestions && filteredTechs.length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 glass-card border border-primary/20 rounded-lg max-h-80 overflow-y-auto z-50">
+          <div className="absolute top-full left-0 right-0 mt-2 glass-card border border-primary/20 rounded-lg max-h-96 overflow-y-auto z-50">
             <div className="p-4">
+              <div className="flex justify-between items-center mb-4">
+                <div className="text-sm text-muted-foreground">
+                  Click technologies to select multiple, then add them to your timeline
+                </div>
+                <div className="flex gap-2">
+                  {pendingSelections.size > 0 && (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setPendingSelections(new Set())}
+                        className="text-xs"
+                      >
+                        Clear ({pendingSelections.size})
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={addPendingSelections}
+                        className="text-xs bg-primary hover:bg-primary/90"
+                      >
+                        <Check className="h-3 w-3 mr-1" />
+                        Add Selected
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+              
               <div className="flex flex-wrap gap-2">
-                {filteredTechs.slice(0, 50).map((tech) => (
-                  <button
-                    key={tech.id}
-                    onClick={() => addTechnology(tech)}
-                    className={`px-4 py-2 rounded-full border text-sm font-medium transition-all tech-pill-hover ${getEraColor(tech.decade)}`}
-                  >
-                    {tech.name} ({tech.year})
-                  </button>
-                ))}
+                {filteredTechs.slice(0, 50).map((tech) => {
+                  const isSelected = pendingSelections.has(tech.id);
+                  const isAlreadyInTimeline = selectedTechs.find(t => t.id === tech.id);
+                  
+                  return (
+                    <button
+                      key={tech.id}
+                      onClick={() => !isAlreadyInTimeline && toggleTechnologySelection(tech)}
+                      disabled={!!isAlreadyInTimeline}
+                      className={`px-4 py-2 rounded-full border text-sm font-medium transition-all relative ${
+                        isAlreadyInTimeline 
+                          ? 'opacity-50 cursor-not-allowed bg-muted' 
+                          : isSelected 
+                            ? `${getEraColor(tech.decade)} ring-2 ring-primary transform scale-105` 
+                            : `${getEraColor(tech.decade)} tech-pill-hover hover:ring-1 hover:ring-primary/50`
+                      }`}
+                    >
+                      {isSelected && (
+                        <Check className="h-3 w-3 absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full p-0.5" />
+                      )}
+                      {isAlreadyInTimeline && (
+                        <X className="h-3 w-3 absolute -top-1 -right-1 bg-muted-foreground text-background rounded-full p-0.5" />
+                      )}
+                      {tech.name} ({tech.year})
+                      {isAlreadyInTimeline && (
+                        <span className="ml-1 text-xs opacity-60">Added</span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -116,9 +194,20 @@ const TechnologySelector: React.FC<TechnologySelectorProps> = ({ onStartAnimatio
       {/* Selected Technologies */}
       {selectedTechs.length > 0 && (
         <div className="w-full max-w-4xl mb-8">
-          <h3 className="text-2xl font-semibold mb-6 text-center">
-            Selected Technologies ({selectedTechs.length})
-          </h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-2xl font-semibold">
+              Selected Technologies ({selectedTechs.length})
+            </h3>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearAllSelections}
+              className="text-destructive hover:text-destructive"
+            >
+              <X className="h-4 w-4 mr-1" />
+              Clear All
+            </Button>
+          </div>
           <div className="glass-card p-6 border border-primary/20 rounded-lg">
             <div className="flex flex-wrap gap-3">
               {selectedTechs
