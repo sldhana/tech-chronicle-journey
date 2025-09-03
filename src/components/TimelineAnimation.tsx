@@ -175,7 +175,7 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
   }
 
   // Render timeline phase
-  if (currentPhase === 'timeline') {
+  if (currentPhase === 'timeline' || currentPhase === 'ending') {
     const theme = currentTech ? getDecadeTheme(currentTech.decade) : getDecadeTheme(selectedTechnologies[0].decade);
     const IconComponent = getIconComponent(theme.icon);
 
@@ -213,13 +213,13 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
         <div className="flex-1 relative">
           <ScrollArea className="h-full" ref={scrollAreaRef}>
             <div className="relative p-8" ref={timelineContainerRef}>
-              {/* Central timeline line */}
-              <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-border transform -translate-x-0.5" />
+              {/* Central timeline line in the background */}
+              <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-border -translate-x-1/2 z-0" />
               
               {/* Timeline items */}
-              <div className="space-y-8">
+              <div className="space-y-8 relative z-10">
                 {completedTechs.map((tech, index) => {
-                  const isLeft = index % 2 === 0;
+                  // All items are centered now
                   const isLatest = index === completedTechs.length - 1;
                   const techTheme = getDecadeTheme(tech.decade);
                   const sizeClass = getTechSizeClass(tech.year);
@@ -228,20 +228,20 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
                     <div 
                       key={tech.id} 
                       ref={isLatest ? latestTechRef : null}
-                      className={`relative flex items-center ${isLeft ? 'justify-end pr-8' : 'justify-start pl-8'}`}
+                      className="relative flex flex-col items-center z-10"
                       style={{
                         animation: `fadeInUp 0.6s ease-out ${index * 0.2}s both`
                       }}
                     >
-                      {/* Timeline dot with enhanced styling for latest item */}
-                      <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
+                      {/* Timeline dot above the line */}
+                      <div className="absolute left-1/2 -translate-x-1/2 z-20">
                         <div className={`w-4 h-4 rounded-full bg-era-${tech.decade.replace('s', '')} border-2 border-background shadow-lg ${
                           isLatest ? 'animate-pulse ring-4 ring-primary/30' : ''
                         }`} />
                       </div>
                       
-                      {/* Content card with enhanced animation for latest */}
-                      <div className={`glass-card p-6 border border-primary/20 max-w-md ${isLeft ? 'mr-8' : 'ml-8'} timeline-item ${
+                      {/* Content card above the line */}
+                      <div className={`glass-card p-6 border border-primary/20 max-w-md mt-4 mb-4 timeline-item z-20 ${
                         isLatest ? 'ring-2 ring-primary/40 shadow-2xl' : ''
                       }`}>
                         <div className="flex items-center gap-3 mb-4">
@@ -272,10 +272,9 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
                             </div>
                           </div>
                         )}
-                        
-                        {/* Connection line to timeline */}
-                        <div className={`absolute top-1/2 ${isLeft ? 'right-0 translate-x-full' : 'left-0 -translate-x-full'} w-8 h-0.5 bg-border transform -translate-y-1/2`} />
                       </div>
+                      {/* Connection line to timeline */}
+                      <div className="w-8 h-0.5 bg-border" />
                     </div>
                   );
                 })}
@@ -290,6 +289,29 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
                     </div>
                   </div>
                 )}
+                
+                {/* Completion message when all technologies are done */}
+                {completedTechs.length === selectedTechnologies.length && completedTechs.length > 0 && (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <div className="glass-card p-8 border border-primary/20 rounded-lg text-center max-w-md">
+                      <div className="text-3xl font-bold bg-gradient-timeline bg-clip-text text-transparent mb-4">
+                        Journey Complete!
+                      </div>
+                      <div className="text-lg text-foreground mb-6">
+                        You've explored {completedTechs.length} technologies across {new Set(completedTechs.map(t => t.decade)).size} decades of computing history.
+                      </div>
+                      <Button
+                        onClick={onBack}
+                        size="lg"
+                        variant="outline"
+                        className="glass-card border-primary/30 hover:border-primary/50"
+                      >
+                        <ArrowLeft className="mr-2 h-5 w-5" />
+                        Create Another Timeline
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </ScrollArea>
@@ -298,82 +320,7 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
     );
   }
 
-  // Render ending phase
-  if (currentPhase === 'ending') {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
-        <div className="text-center animate-fade-in">
-          <div className="text-6xl font-bold bg-gradient-timeline bg-clip-text text-transparent mb-8">
-            Your Technology Journey
-          </div>
-          <div className="text-4xl font-bold text-foreground mb-12">
-            Complete Timeline
-          </div>
-
-          {/* Final timeline visualization */}
-          <div className="glass-card p-8 max-w-6xl mx-auto border border-primary/20 mb-12">
-            <div className="text-2xl font-semibold mb-8">Complete Journey Timeline</div>
-            <div className="flex flex-wrap gap-4 justify-center">
-              {completedTechs.map((tech, index) => {
-                const theme = getDecadeTheme(tech.decade);
-                const isHovered = hoveredTech === tech.id;
-                
-                return (
-                  <div
-                    key={tech.id}
-                    className="relative"
-                    onMouseEnter={() => setHoveredTech(tech.id)}
-                    onMouseLeave={() => setHoveredTech(null)}
-                  >
-                    <div 
-                      className={`w-4 h-4 rounded-full bg-era-${tech.decade.replace('s', 's')} cursor-pointer transition-all duration-300 ${
-                        isHovered ? 'scale-150 shadow-lg' : 'hover:scale-125'
-                      }`}
-                      style={{
-                        animationDelay: `${index * 0.1}s`,
-                        animation: 'fadeIn 0.5s ease-out forwards'
-                      }}
-                    />
-                    {isHovered && (
-                      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 glass-card p-3 border border-primary/20 rounded-lg whitespace-nowrap z-10">
-                        <div className="font-semibold">{tech.name}</div>
-                        <div className="text-sm text-muted-foreground">{tech.year} • {tech.category}</div>
-                        {tech.majorEvent && (
-                          <div className="text-xs text-muted-foreground mt-1 max-w-48 whitespace-normal">
-                            {tech.majorEvent}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            <div className="mt-8 text-lg text-muted-foreground">
-              Hover over the circles to see each technology's impact on your journey
-            </div>
-          </div>
-
-          {/* Call to action */}
-          <div className="space-y-6">
-            <Button
-              onClick={onBack}
-              size="lg"
-              variant="outline"
-              className="mr-4 glass-card border-primary/30 hover:border-primary/50"
-            >
-              <ArrowLeft className="mr-2 h-5 w-5" />
-              Create Another Timeline
-            </Button>
-            <div className="text-lg text-muted-foreground">
-              Share your technology journey and inspire others to explore their path through programming history
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+  console.log(currentPhase)
   return null;
 };
 
