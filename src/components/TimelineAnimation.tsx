@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Calendar, Users, Zap } from 'lucide-react';
 import { Technology, historicalEvents, getDecadeTheme, getTechSizeClass } from '@/data/technologies';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import * as LucideIcons from 'lucide-react';
 
 interface TimelineAnimationProps {
@@ -21,6 +22,8 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
   const [showHistoricalEvent, setShowHistoricalEvent] = useState(false);
   const [completedTechs, setCompletedTechs] = useState<Technology[]>([]);
   const [hoveredTech, setHoveredTech] = useState<string | null>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const timelineContainerRef = useRef<HTMLDivElement>(null);
 
   // Get the current technology
   const currentTech = selectedTechnologies[currentTechIndex];
@@ -30,9 +33,22 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
 
   // Animation timing constants
   const INTRO_DURATION = 3000;
-  const TECH_DISPLAY_DURATION = 2000;
+  const TECH_DISPLAY_DURATION = 1000;
   const DECADE_TRANSITION_DURATION = 1500;
   const ENDING_DURATION = 5000;
+
+  // Auto-scroll to bottom when new item is added
+  useEffect(() => {
+    if (scrollAreaRef.current && completedTechs.length > 0) {
+      const scrollElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollElement) {
+        scrollElement.scrollTo({
+          top: scrollElement.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }, [completedTechs.length]);
 
   // Start timeline animation
   useEffect(() => {
@@ -57,7 +73,7 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
 
       // Check if we're done with all technologies
       if (currentTechIndex >= selectedTechnologies.length - 1) {
-        setCurrentPhase('ending');
+        setTimeout(() => setCurrentPhase('ending'), 1000);
         return;
       }
 
@@ -144,77 +160,118 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
   }
 
   // Render timeline phase
-  if (currentPhase === 'timeline' && currentTech) {
-    const theme = getDecadeTheme(currentTech.decade);
+  if (currentPhase === 'timeline') {
+    const theme = currentTech ? getDecadeTheme(currentTech.decade) : getDecadeTheme(selectedTechnologies[0].decade);
     const IconComponent = getIconComponent(theme.icon);
-    const sizeClass = getTechSizeClass(currentTech.year);
 
     return (
-      <div className={`min-h-screen era-${currentTech.decade.replace('s', 's')} flex flex-col`}>
+      <div className="min-h-screen bg-background flex flex-col">
         {/* Header with decade info */}
-        <div className="p-8">
+        <div className="p-6 border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <IconComponent className={`h-12 w-12 text-era-${currentTech.decade.replace('s', 's')}`} />
+              <IconComponent className={`h-10 w-10 text-primary`} />
               <div>
-                <div className={`text-2xl font-bold text-era-${currentTech.decade.replace('s', 's')}`}>
-                  {theme.title}
+                <div className="text-xl font-bold text-foreground">
+                  Technology Timeline
                 </div>
-                <div className="text-lg text-muted-foreground">{currentTech.decade}</div>
+                <div className="text-sm text-muted-foreground">Your Career Journey</div>
               </div>
             </div>
             <div className="text-right">
               <div className="text-sm text-muted-foreground">Progress</div>
-              <div className="text-xl font-semibold">
-                {currentTechIndex + 1} / {selectedTechnologies.length}
+              <div className="text-lg font-semibold">
+                {completedTechs.length} / {selectedTechnologies.length}
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Main technology display */}
-        <div className="flex-1 flex items-center justify-center px-8">
-          <div className="text-center timeline-enter">
-            <div className={`${sizeClass} font-bold text-era-${currentTech.decade.replace('s', 's')} mb-6`}>
-              {currentTech.name}
-            </div>
-            <div className="glass-card p-8 max-w-2xl mx-auto border border-primary/20">
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <Calendar className="h-6 w-6 text-muted-foreground" />
-                <span className="text-2xl font-semibold">{currentTech.year}</span>
-              </div>
-              <div className="text-lg text-foreground mb-4">
-                {currentTech.description}
-              </div>
-              <div className={`text-sm text-era-${currentTech.decade.replace('s', 's')} font-medium`}>
-                {currentTech.category}
-              </div>
-              {currentTech.majorEvent && (
-                <div className="mt-4 pt-4 border-t border-primary/20">
-                  <div className="flex items-start gap-2">
-                    <Users className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0" />
-                    <div className="text-sm text-muted-foreground italic">
-                      {currentTech.majorEvent}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Progress timeline at bottom */}
-        <div className="p-8">
-          <div className="w-full bg-surface-elevated rounded-full h-2 mb-4">
+          {/* Progress bar */}
+          <div className="w-full bg-surface-elevated rounded-full h-2 mt-4">
             <div 
-              className={`bg-era-${currentTech.decade.replace('s', 's')} h-2 rounded-full transition-all duration-500`}
-              style={{ width: `${((currentTechIndex + 1) / selectedTechnologies.length) * 100}%` }}
+              className="bg-primary h-2 rounded-full transition-all duration-500"
+              style={{ width: `${(completedTechs.length / selectedTechnologies.length) * 100}%` }}
             />
           </div>
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>{selectedTechnologies[0]?.year}</span>
-            <span>{selectedTechnologies[selectedTechnologies.length - 1]?.year}</span>
-          </div>
+        </div>
+
+        {/* Vertical Timeline */}
+        <div className="flex-1 relative">
+          <ScrollArea className="h-full" ref={scrollAreaRef}>
+            <div className="relative p-8" ref={timelineContainerRef}>
+              {/* Central timeline line */}
+              <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-border transform -translate-x-0.5" />
+              
+              {/* Timeline items */}
+              <div className="space-y-8">
+                {completedTechs.map((tech, index) => {
+                  const isLeft = index % 2 === 0;
+                  const techTheme = getDecadeTheme(tech.decade);
+                  const sizeClass = getTechSizeClass(tech.year);
+                  
+                  return (
+                    <div 
+                      key={tech.id} 
+                      className={`relative flex items-center ${isLeft ? 'justify-end pr-8' : 'justify-start pl-8'}`}
+                      style={{
+                        animation: `fadeInUp 0.6s ease-out ${index * 0.2}s both`
+                      }}
+                    >
+                      {/* Timeline dot */}
+                      <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
+                        <div className={`w-4 h-4 rounded-full bg-era-${tech.decade.replace('s', '')} border-2 border-background shadow-lg`} />
+                      </div>
+                      
+                      {/* Content card */}
+                      <div className={`glass-card p-6 border border-primary/20 max-w-md ${isLeft ? 'mr-8' : 'ml-8'} timeline-item`}>
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className={`text-2xl font-bold text-era-${tech.decade.replace('s', '')}`}>
+                            {tech.year}
+                          </div>
+                          <div className="flex-1">
+                            <div className={`${sizeClass} font-bold text-foreground`}>
+                              {tech.name}
+                            </div>
+                            <div className={`text-sm text-era-${tech.decade.replace('s', '')} font-medium`}>
+                              {tech.category}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="text-sm text-foreground mb-3">
+                          {tech.description}
+                        </div>
+                        
+                        {tech.majorEvent && (
+                          <div className="pt-3 border-t border-primary/20">
+                            <div className="flex items-start gap-2">
+                              <Users className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                              <div className="text-xs text-muted-foreground italic">
+                                {tech.majorEvent}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Connection line to timeline */}
+                        <div className={`absolute top-1/2 ${isLeft ? 'right-0 translate-x-full' : 'left-0 -translate-x-full'} w-8 h-0.5 bg-border transform -translate-y-1/2`} />
+                      </div>
+                    </div>
+                  );
+                })}
+                
+                {/* Current item indicator if still animating */}
+                {currentTech && completedTechs.length < selectedTechnologies.length && (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-pulse">
+                      <div className="w-8 h-8 rounded-full bg-primary/50 flex items-center justify-center">
+                        <div className="w-4 h-4 rounded-full bg-primary animate-ping" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </ScrollArea>
         </div>
       </div>
     );

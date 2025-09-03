@@ -148,6 +148,17 @@
     50% { transform: translateY(-10px); }
   }
 
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   /* Size variants for technology age visualization */
   .tech-ancient { font-size: 2.5rem; font-weight: 800; } /* 1960s-1970s */
   .tech-vintage { font-size: 2rem; font-weight: 700; } /* 1980s */
