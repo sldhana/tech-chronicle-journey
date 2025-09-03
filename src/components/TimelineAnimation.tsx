@@ -146,13 +146,6 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
     );
   }
 
-  return null;
-};
-
-export default TimelineAnimation;
-    );
-  }
-
   // Render decade transition with historical event
   if (showHistoricalEvent && currentPhase === 'timeline') {
     const event = getCurrentHistoricalEvent();
@@ -378,3 +371,10 @@ export default TimelineAnimation;
           </div>
         </div>
       </div>
+    );
+  }
+
+  return null;
+};
+
+export default TimelineAnimation;
