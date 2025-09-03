@@ -24,6 +24,8 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				surface: 'hsl(var(--surface))',
+				'surface-elevated': 'hsl(var(--surface-elevated))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -52,16 +54,30 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+				era: {
+					'1960s': 'hsl(var(--era-1960s))',
+					'1970s': 'hsl(var(--era-1970s))',
+					'1980s': 'hsl(var(--era-1980s))',
+					'1990s': 'hsl(var(--era-1990s))',
+					'2000s': 'hsl(var(--era-2000s))',
+					'2010s': 'hsl(var(--era-2010s))',
+					'2020s': 'hsl(var(--era-2020s))'
 				}
+			},
+			backgroundImage: {
+				'gradient-timeline': 'var(--gradient-timeline)',
+				'gradient-surface': 'var(--gradient-surface)'
+			},
+			fontSize: {
+				xs: 'var(--text-xs)',
+				sm: 'var(--text-sm)',
+				base: 'var(--text-base)',
+				lg: 'var(--text-lg)',
+				xl: 'var(--text-xl)',
+				'2xl': 'var(--text-2xl)',
+				'3xl': 'var(--text-3xl)',
+				'4xl': 'var(--text-4xl)',
+				'5xl': 'var(--text-5xl)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
