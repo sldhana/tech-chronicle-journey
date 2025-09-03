@@ -24,6 +24,7 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
   const [hoveredTech, setHoveredTech] = useState<string | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const timelineContainerRef = useRef<HTMLDivElement>(null);
+  const latestTechRef = useRef<HTMLDivElement>(null);
 
   // Get the current technology
   const currentTech = selectedTechnologies[currentTechIndex];
@@ -37,16 +38,30 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
   const DECADE_TRANSITION_DURATION = 1500;
   const ENDING_DURATION = 5000;
 
-  // Auto-scroll to bottom when new item is added
-  useEffect(() => {
+  // Enhanced auto-scroll function
+  const scrollToLatest = () => {
     if (scrollAreaRef.current && completedTechs.length > 0) {
       const scrollElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
-      if (scrollElement) {
-        scrollElement.scrollTo({
-          top: scrollElement.scrollHeight,
-          behavior: 'smooth'
+      if (scrollElement && latestTechRef.current) {
+        // Smooth scroll to the latest technology item
+        latestTechRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'nearest'
         });
       }
+    }
+  };
+
+  // Auto-scroll when new item is added with delay for animation
+  useEffect(() => {
+    if (completedTechs.length > 0) {
+      // Add a small delay to allow the animation to start before scrolling
+      const scrollTimer = setTimeout(() => {
+        scrollToLatest();
+      }, 300);
+      
+      return () => clearTimeout(scrollTimer);
     }
   }, [completedTechs.length]);
 
@@ -131,6 +146,13 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
     );
   }
 
+  return null;
+};
+
+export default TimelineAnimation;
+    );
+  }
+
   // Render decade transition with historical event
   if (showHistoricalEvent && currentPhase === 'timeline') {
     const event = getCurrentHistoricalEvent();
@@ -205,24 +227,30 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
               <div className="space-y-8">
                 {completedTechs.map((tech, index) => {
                   const isLeft = index % 2 === 0;
+                  const isLatest = index === completedTechs.length - 1;
                   const techTheme = getDecadeTheme(tech.decade);
                   const sizeClass = getTechSizeClass(tech.year);
                   
                   return (
                     <div 
                       key={tech.id} 
+                      ref={isLatest ? latestTechRef : null}
                       className={`relative flex items-center ${isLeft ? 'justify-end pr-8' : 'justify-start pl-8'}`}
                       style={{
                         animation: `fadeInUp 0.6s ease-out ${index * 0.2}s both`
                       }}
                     >
-                      {/* Timeline dot */}
+                      {/* Timeline dot with enhanced styling for latest item */}
                       <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
-                        <div className={`w-4 h-4 rounded-full bg-era-${tech.decade.replace('s', '')} border-2 border-background shadow-lg`} />
+                        <div className={`w-4 h-4 rounded-full bg-era-${tech.decade.replace('s', '')} border-2 border-background shadow-lg ${
+                          isLatest ? 'animate-pulse ring-4 ring-primary/30' : ''
+                        }`} />
                       </div>
                       
-                      {/* Content card */}
-                      <div className={`glass-card p-6 border border-primary/20 max-w-md ${isLeft ? 'mr-8' : 'ml-8'} timeline-item`}>
+                      {/* Content card with enhanced animation for latest */}
+                      <div className={`glass-card p-6 border border-primary/20 max-w-md ${isLeft ? 'mr-8' : 'ml-8'} timeline-item ${
+                        isLatest ? 'ring-2 ring-primary/40 shadow-2xl' : ''
+                      }`}>
                         <div className="flex items-center gap-3 mb-4">
                           <div className={`text-2xl font-bold text-era-${tech.decade.replace('s', '')}`}>
                             {tech.year}
@@ -283,10 +311,10 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
         <div className="text-center animate-fade-in">
           <div className="text-6xl font-bold bg-gradient-timeline bg-clip-text text-transparent mb-8">
-            Your Technology Life
+            Your Technology Journey
           </div>
           <div className="text-4xl font-bold text-foreground mb-12">
-            in 60 Seconds
+            Complete Timeline
           </div>
 
           {/* Final timeline visualization */}
@@ -350,10 +378,3 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
           </div>
         </div>
       </div>
-    );
-  }
-
-  return null;
-};
-
-export default TimelineAnimation;
