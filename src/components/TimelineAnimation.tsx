@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Calendar, Users, Zap } from 'lucide-react';
-import { Technology, historicalEvents, getDecadeTheme, getTechSizeClass } from '@/data/technologies';
+import { Technology, historicalEvents, getDecadeTheme, getTechSizeClass, getHistoricalEventForYear } from '@/data/technologies';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import * as LucideIcons from 'lucide-react';
@@ -22,6 +22,8 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
   const [showHistoricalEvent, setShowHistoricalEvent] = useState(false);
   const [completedTechs, setCompletedTechs] = useState<Technology[]>([]);
   const [hoveredTech, setHoveredTech] = useState<string | null>(null);
+  // Map of tech.id to assigned event (for stable rendering)
+  const [assignedEvents, setAssignedEvents] = useState<Record<string, any>>({});
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const timelineContainerRef = useRef<HTMLDivElement>(null);
   const latestTechRef = useRef<HTMLDivElement>(null);
@@ -113,11 +115,7 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
     return () => clearTimeout(techTimer);
   }, [currentTechIndex, currentPhase, currentTech, selectedTechnologies]);
 
-  // Get historical event for a given decade and year
-  const getHistoricalEventForYear = (decade: string, year: number) => {
-    const events = historicalEvents[decade] || [];
-    return events.find(e => e.year === year) || null;
-  };
+  // Remove local getHistoricalEventForYear, use imported version directly
 
   // Get dynamic icon component
   const getIconComponent = (iconName: string) => {
@@ -194,8 +192,13 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
                   const isLatest = index === completedTechs.length - 1;
                   const techTheme = getDecadeTheme(tech.decade);
                   const sizeClass = getTechSizeClass(tech.year);
-                  // Use the event that matches the technology's year
-                  const historicalEvent = getHistoricalEventForYear(tech.decade, tech.year);
+                  // Assign event only if not already assigned
+                  let event = assignedEvents[tech.id];
+                  if (!event) {
+                    event = getHistoricalEventForYear(tech.decade, tech.year, tech.id);
+                    setAssignedEvents(prev => ({ ...prev, [tech.id]: event }));
+                  }
+                  const historicalEvent = event;
 
                   return (
                     <div 

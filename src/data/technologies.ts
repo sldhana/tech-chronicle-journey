@@ -439,23 +439,49 @@ export const getTechSizeClass = (year: number) => {
   return 'tech-latest';
 };
 
-export const getHistoricalEventForYear = (decade: string, year: number) => {
-  // Some technologies may have a year that doesn't match the decade string exactly (e.g., 2009 in '2010s')
-  // Fix: Find the correct decade for the year if not found in the given decade
-  let events = historicalEvents[decade] || [];
-  let event = events.find(e => e.year === year);
-  if (!event) {
+// Helper to shuffle an array
+function shuffleArray<T>(array: T[]): T[] {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Map to track assigned events for each year in a session
+const assignedEventsMap: Record<string, Record<number, Set<string>>> = {};
+
+export const getHistoricalEventForYear = (decade: string, year: number, techId?: string) => {
+  // Find all events for the year
+  let events = historicalEvents[decade]?.filter(e => e.year === year) || [];
+  if (events.length === 0) {
     // Try to find the correct decade for the year
     const decadeKey = Object.keys(historicalEvents).find(d => {
       const start = parseInt(d.slice(0, 4), 10);
       return year >= start && year < start + 10;
     });
     if (decadeKey) {
-      events = historicalEvents[decadeKey] || [];
-      event = events.find(e => e.year === year) || null;
+      events = historicalEvents[decadeKey]?.filter(e => e.year === year) || [];
     }
   }
-  return event || null;
+  if (events.length === 0) return null;
+
+  // Track assigned events for this decade/year
+  if (!assignedEventsMap[decade]) assignedEventsMap[decade] = {};
+  if (!assignedEventsMap[decade][year]) assignedEventsMap[decade][year] = new Set();
+
+  // Try to assign a distinct event for this tech
+  const unassigned = events.filter(e => !assignedEventsMap[decade][year].has(e.event));
+  let chosenEvent;
+  if (unassigned.length > 0) {
+    chosenEvent = shuffleArray(unassigned)[0];
+  } else {
+    // If all events are assigned, allow reuse (random)
+    chosenEvent = shuffleArray(events)[0];
+  }
+  if (chosenEvent) assignedEventsMap[decade][year].add(chosenEvent.event);
+  return chosenEvent;
 };
 
 export const getDecadeForYear = (year: number): string | null => {
