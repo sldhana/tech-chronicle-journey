@@ -6,28 +6,29 @@
 
 @layer base {
   :root {
-    /* Fun color palette from Coolors - new palette for readability */
-    --background: 207 90% 12%;         /* 118AB2 (dark blue, readable) */
-    --foreground: 0 0% 100%;           /* White for high contrast */
-    --surface: 44 100% 85%;            /* FFD166 - Soft yellow */
-    --surface-elevated: 166 73% 66%;   /* 06D6A0 - Mint green */
+    /* Professional, readable, and pleasing color palette */
+    --background: 222 26% 18%;         /* Dark blue-gray */
+    --foreground: 0 0% 100%;           /* White */
+    --surface: 220 13% 23%;            /* Slightly lighter blue-gray */
+    --surface-elevated: 210 16% 32%;   /* Even lighter blue-gray */
 
-    /* Era-specific accent colors using new palette */
-    --era-1960s: 348 83% 60%;   /* EF476F - Pinkish Red */
-    --era-1970s: 44 100% 65%;   /* FFD166 - Yellow */
-    --era-1980s: 166 73% 46%;   /* 06D6A0 - Mint green */
-    --era-1990s: 199 77% 38%;   /* 118AB2 - Blue */
-    --era-2000s: 191 85% 17%;   /* 073B4C - Dark green/blue */
-    --era-2010s: 44 100% 65%;   /* FFD166 - Yellow (repeat for more color) */
-    --era-2020s: 348 83% 60%;   /* EF476F - Pinkish Red (repeat for more color) */
+    /* Era-specific accent colors: harmonious, distinct, and accessible */
+    --era-1960s: 200 98% 39%;   /* Vivid blue */
+    --era-1970s: 158 64% 52%;   /* Emerald green */
+    --era-1980s: 42 100% 62%;   /* Warm gold */
+    --era-1990s: 340 65% 47%;   /* Soft magenta */
+    --era-2000s: 271 62% 54%;   /* Soft purple */
+    --era-2010s: 24 100% 50%;   /* Orange */
+    --era-2020s: 192 100% 36%;  /* Cyan blue */
 
-    /* Timeline gradients - now a single accent color for header text, not rainbow */
+    /* Timeline gradients */
     --gradient-timeline: linear-gradient(180deg, 
       hsl(var(--era-1960s)) 0%,
-      hsl(var(--era-1970s)) 20%,
-      hsl(var(--era-1980s)) 40%,
-      hsl(var(--era-1990s)) 60%,
-      hsl(var(--era-2000s)) 80%,
+      hsl(var(--era-1970s)) 16%,
+      hsl(var(--era-1980s)) 32%,
+      hsl(var(--era-1990s)) 48%,
+      hsl(var(--era-2000s)) 64%,
+      hsl(var(--era-2010s)) 80%,
       hsl(var(--era-2020s)) 100%);
     
     --gradient-surface: linear-gradient(135deg, 
@@ -35,9 +36,9 @@
       hsl(var(--surface-elevated)) 100%);
     
     /* Glassmorphism effects */
-    --glass-bg: rgba(238, 68, 102, 0.731);
-    --glass-border: rgba(239, 71, 111, 0.18); /* EF476F border */
-    --glass-shadow: 0 8px 32px rgba(6, 214, 160, 0.15); /* 06D6A0 shadow */
+    --glass-bg: rgba(34, 40, 49, 0.92); /* Slightly transparent dark blue-gray */
+    --glass-border: rgba(200, 200, 255, 0.12); /* Subtle blue border */
+    --glass-shadow: 0 8px 32px rgba(34, 40, 49, 0.25);
     
     /* Animation timings */
     --animation-fast: 0.2s ease-out;
@@ -55,7 +56,7 @@
     --text-4xl: 2.25rem;
     --text-5xl: 3rem;
 
-    /* Updated shadcn tokens for fun theme */
+    /* Updated shadcn tokens for accessible, modern theme */
     --card: var(--surface);
     --card-foreground: var(--foreground);
     --popover: var(--surface-elevated);
@@ -65,12 +66,12 @@
     --secondary: var(--surface-elevated);
     --secondary-foreground: var(--foreground);
     --muted: var(--surface);
-    --muted-foreground: 238 68% 102%; /* 118AB2 */
+    --muted-foreground: 220 10% 60%; /* Muted blue-gray */
     --accent: var(--era-1980s);
     --accent-foreground: var(--foreground);
-    --destructive: 348 83% 60%; /* EF476F */
+    --destructive: 0 80% 60%; /* Red */
     --destructive-foreground: var(--foreground);
-    --border: 199 77% 38%; /* 118AB2 */
+    --border: 220 13% 23%; /* Matches surface */
     --input: var(--surface-elevated);
     --ring: var(--era-1960s);
     --radius: 0.75rem;
@@ -181,6 +182,33 @@
   .tech-modern { font-size: 1.25rem; font-weight: 500; } /* 2000s */
   .tech-current { font-size: 1rem; font-weight: 400; } /* 2010s */
   .tech-latest { font-size: 0.875rem; font-weight: 300; } /* 2020s */
+
+  /* Add a fun CSS animation for the ending message */
+  @keyframes popInCelebrate {
+    0% {
+      opacity: 0;
+      transform: scale(0.7) rotate(-8deg);
+      filter: blur(4px);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.05) rotate(2deg);
+      filter: blur(0);
+    }
+    80% {
+      transform: scale(0.98) rotate(-1deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+      filter: blur(0);
+    }
+  }
+
+  .ending-celebrate {
+    animation: popInCelebrate 1s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity, filter;
+  }
 }
 
 /* Remove rainbow text for header, use a single accent color */

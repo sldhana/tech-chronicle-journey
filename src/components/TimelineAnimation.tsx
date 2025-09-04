@@ -113,11 +113,10 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
     return () => clearTimeout(techTimer);
   }, [currentTechIndex, currentPhase, currentTech, selectedTechnologies]);
 
-  // Get random historical event for a given decade
-  const getRandomHistoricalEvent = (decade: string) => {
+  // Get historical event for a given decade and year
+  const getHistoricalEventForYear = (decade: string, year: number) => {
     const events = historicalEvents[decade] || [];
-    if (events.length === 0) return null;
-    return events[Math.floor(Math.random() * events.length)];
+    return events.find(e => e.year === year) || null;
   };
 
   // Get dynamic icon component
@@ -195,7 +194,8 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
                   const isLatest = index === completedTechs.length - 1;
                   const techTheme = getDecadeTheme(tech.decade);
                   const sizeClass = getTechSizeClass(tech.year);
-                  const historicalEvent = getRandomHistoricalEvent(tech.decade);
+                  // Use the event that matches the technology's year
+                  const historicalEvent = getHistoricalEventForYear(tech.decade, tech.year);
 
                   return (
                     <div 
@@ -232,7 +232,7 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
                         <div className="text-sm text-foreground mb-3">
                           {tech.description}
                         </div>
-                        {/* Historical event for this decade */}
+                        {/* Historical event for this decade and year */}
                         {historicalEvent && (
                           <div className="pt-3 border-t border-primary/20 mb-2">
                             <div className="flex items-start gap-2">
