@@ -40,7 +40,6 @@ const TechnologySelector: React.FC<TechnologySelectorProps> = ({ onStartAnimatio
     const techsToAdd = technologies.filter(tech => 
       pendingSelections.has(tech.id) && !selectedTechs.find(t => t.id === tech.id)
     );
-    
     setSelectedTechs(prev => [...prev, ...techsToAdd]);
     setPendingSelections(new Set());
     setSearchTerm('');
@@ -95,11 +94,11 @@ const TechnologySelector: React.FC<TechnologySelectorProps> = ({ onStartAnimatio
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold bg-gradient-timeline bg-clip-text text-transparent mb-4">
-          Technology Timeline Builder
+          What's your craft?
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl">
-          Create your personalized journey through the evolution of programming technologies.
-          Select multiple technologies that shaped your career and watch them come alive in a stunning timeline animation.
+          Create your personalized journey through the evolution of technologies.
+          Select multiple technologies that shaped your career and watch them come alive in a timeline.
         </p>
       </div>
 
@@ -239,6 +238,7 @@ const TechnologySelector: React.FC<TechnologySelectorProps> = ({ onStartAnimatio
             onClick={handleStartAnimation}
             size="lg"
             className="px-12 py-6 text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-300 shadow-lg hover:shadow-xl"
+            disabled={selectedTechs.length === 0}
           >
             <Play className="mr-3 h-6 w-6" />
             Start Timeline Animation

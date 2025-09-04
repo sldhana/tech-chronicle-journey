@@ -1,3 +1,87 @@
+@keyframes flipScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) rotateY(-90deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.05) rotateY(10deg);
+  }
+  80% {
+    transform: scale(0.98) rotateY(-5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(0);
+  }
+}
+
+.animate-flipScale {
+  animation: flipScale 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: left center;
+}
+@keyframes pageFlip {
+  0% {
+    opacity: 0;
+    transform: rotateY(-90deg) scale(0.95);
+  }
+  60% {
+    opacity: 1;
+    transform: rotateY(10deg) scale(1.03);
+  }
+  80% {
+    transform: rotateY(-5deg) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateY(0) scale(1);
+  }
+}
+
+.animate-pageFlip {
+  animation: pageFlip 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: left center;
+}
+@keyframes swingTopFwd {
+  0% {
+    opacity: 0;
+    transform: rotateX(90deg) translateY(-40px) scale(0.8);
+  }
+  60% {
+    opacity: 1;
+    transform: rotateX(-10deg) translateY(4px) scale(1.05);
+  }
+  80% {
+    transform: rotateX(5deg) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0) translateY(0) scale(1);
+  }
+}
+
+.animate-swingTopFwd {
+  animation: swingTopFwd 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+  transform-origin: top center;
+}
+@keyframes fadeInCard {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fadeInCard {
+  animation: fadeInCard 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -129,11 +213,12 @@
   
   .tech-pill-hover {
     transition: all var(--animation-smooth);
+    outline: none;
   }
-  
-  .tech-pill-hover:hover {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  .tech-pill-hover:hover, .tech-pill-hover:focus {
+    transform: translateY(-4px) scale(1.08) rotate(-2deg);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.18), 0 0 0 3px #fff7;
+    z-index: 50;
   }
 }
 
