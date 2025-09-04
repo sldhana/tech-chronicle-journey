@@ -113,9 +113,10 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
     return () => clearTimeout(techTimer);
   }, [currentTechIndex, currentPhase, currentTech, selectedTechnologies]);
 
-  // Get random historical event for current decade
-  const getCurrentHistoricalEvent = () => {
-    const events = historicalEvents[currentDecade] || [];
+  // Get random historical event for a given decade
+  const getRandomHistoricalEvent = (decade: string) => {
+    const events = historicalEvents[decade] || [];
+    if (events.length === 0) return null;
     return events[Math.floor(Math.random() * events.length)];
   };
 
@@ -141,34 +142,6 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
               <Zap className="h-16 w-16 text-primary" />
             </div>
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Render decade transition with historical event
-  if (showHistoricalEvent && currentPhase === 'timeline') {
-    const event = getCurrentHistoricalEvent();
-    const theme = getDecadeTheme(currentDecade);
-    const IconComponent = getIconComponent(event?.icon || theme.icon);
-
-    return (
-      <div className={`min-h-screen flex items-center justify-center era-${currentDecade.replace('s', 's')}`}>
-        <div className="text-center animate-scale-in">
-          <div className="mb-8">
-            <IconComponent className={`h-24 w-24 mx-auto mb-6 text-era-${currentDecade.replace('s', 's')}`} />
-          </div>
-          <div className={`text-4xl font-bold text-era-${currentDecade.replace('s', 's')} mb-4`}>
-            {theme.title}
-          </div>
-          <div className="text-xl text-foreground mb-2">
-            {currentDecade}
-          </div>
-          {event && (
-            <div className="text-lg text-muted-foreground max-w-2xl">
-              {event.year}: {event.event}
-            </div>
-          )}
         </div>
       </div>
     );
@@ -219,18 +192,18 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
               {/* Timeline items */}
               <div className="space-y-8 relative z-10">
                 {completedTechs.map((tech, index) => {
-                  // All items are centered now
                   const isLatest = index === completedTechs.length - 1;
                   const techTheme = getDecadeTheme(tech.decade);
                   const sizeClass = getTechSizeClass(tech.year);
-                  
+                  const historicalEvent = getRandomHistoricalEvent(tech.decade);
+
                   return (
                     <div 
                       key={tech.id} 
                       ref={isLatest ? latestTechRef : null}
                       className="relative flex flex-col items-center z-10"
                       style={{
-                        animation: `fadeInUp 0.6s ease-out ${index * 0.2}s both`
+                        animation: `fadeInUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) ${index * 0.25}s both`
                       }}
                     >
                       {/* Timeline dot above the line */}
@@ -241,27 +214,35 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
                       </div>
                       
                       {/* Content card above the line */}
-                      <div className={`glass-card p-6 border border-primary/20 max-w-md mt-4 mb-4 timeline-item z-20 ${
+                      <div className={`glass-card p-6 border border-primary/20 max-w-md w-[380px] mt-4 mb-4 timeline-item z-20 ${
                         isLatest ? 'ring-2 ring-primary/40 shadow-2xl' : ''
                       }`}>
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className={`text-2xl font-bold text-era-${tech.decade.replace('s', '')}`}>
+                        {/* Technology name left, year right */}
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="font-extrabold text-2xl text-foreground text-left">
+                            {tech.name}
+                          </div>
+                          <div className={`font-bold text-lg text-era-${tech.decade.replace('s', '')} text-right`}>
                             {tech.year}
                           </div>
-                          <div className="flex-1">
-                            <div className={`${sizeClass} font-bold text-foreground`}>
-                              {tech.name}
-                            </div>
-                            <div className={`text-sm text-era-${tech.decade.replace('s', '')} font-medium`}>
-                              {tech.category}
-                            </div>
-                          </div>
                         </div>
-                        
+                        <div className="text-xs text-muted-foreground font-medium italic mb-3 text-left">
+                          {tech.category}
+                        </div>
                         <div className="text-sm text-foreground mb-3">
                           {tech.description}
                         </div>
-                        
+                        {/* Historical event for this decade */}
+                        {historicalEvent && (
+                          <div className="pt-3 border-t border-primary/20 mb-2">
+                            <div className="flex items-start gap-2">
+                              <Calendar className="h-4 w-4 text-era-{tech.decade.replace('s', '')} mt-0.5 flex-shrink-0" />
+                              <div className="text-xs text-muted-foreground italic">
+                                <span className="font-semibold">{historicalEvent.year}:</span> {historicalEvent.event}
+                              </div>
+                            </div>
+                          </div>
+                        )}
                         {tech.majorEvent && (
                           <div className="pt-3 border-t border-primary/20">
                             <div className="flex items-start gap-2">
@@ -295,10 +276,10 @@ const TimelineAnimation: React.FC<TimelineAnimationProps> = ({
                   <div className="flex flex-col items-center justify-center py-12">
                     <div className="glass-card p-8 border border-primary/20 rounded-lg text-center max-w-md">
                       <div className="text-3xl font-bold bg-gradient-timeline bg-clip-text text-transparent mb-4">
-                        Journey Complete!
+                        Your technology footprint
                       </div>
                       <div className="text-lg text-foreground mb-6">
-                        You've explored {completedTechs.length} technologies across {new Set(completedTechs.map(t => t.decade)).size} decades of computing history.
+                        You've explored {completedTechs.length} technologies.
                       </div>
                       <Button
                         onClick={onBack}

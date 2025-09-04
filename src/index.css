@@ -6,29 +6,28 @@
 
 @layer base {
   :root {
-    /* Base colors - Dark theme optimized for video recording */
-    --background: 220 15% 5%;
-    --foreground: 210 40% 98%;
-    --surface: 220 15% 8%;
-    --surface-elevated: 220 15% 12%;
+    /* Fun color palette from Coolors - new palette for readability */
+    --background: 207 90% 12%;         /* 118AB2 (dark blue, readable) */
+    --foreground: 0 0% 100%;           /* White for high contrast */
+    --surface: 44 100% 85%;            /* FFD166 - Soft yellow */
+    --surface-elevated: 166 73% 66%;   /* 06D6A0 - Mint green */
 
-    /* Era-specific accent colors */
-    --era-1960s: 158 64% 52%; /* Emerald - Computing birth */
-    --era-1970s: 25 95% 53%; /* Orange - Personal computing */
-    --era-1980s: 300 84% 60%; /* Fuchsia - GUI revolution */
-    --era-1990s: 188 86% 53%; /* Cyan - Web era */
-    --era-2000s: 217 91% 60%; /* Blue - Web 2.0 */
-    --era-2010s: 238 83% 67%; /* Indigo - Mobile first */
-    --era-2020s: 258 90% 66%; /* Violet - AI & Cloud */
+    /* Era-specific accent colors using new palette */
+    --era-1960s: 348 83% 60%;   /* EF476F - Pinkish Red */
+    --era-1970s: 44 100% 65%;   /* FFD166 - Yellow */
+    --era-1980s: 166 73% 46%;   /* 06D6A0 - Mint green */
+    --era-1990s: 199 77% 38%;   /* 118AB2 - Blue */
+    --era-2000s: 191 85% 17%;   /* 073B4C - Dark green/blue */
+    --era-2010s: 44 100% 65%;   /* FFD166 - Yellow (repeat for more color) */
+    --era-2020s: 348 83% 60%;   /* EF476F - Pinkish Red (repeat for more color) */
 
-    /* Timeline gradients */
+    /* Timeline gradients - now a single accent color for header text, not rainbow */
     --gradient-timeline: linear-gradient(180deg, 
       hsl(var(--era-1960s)) 0%,
-      hsl(var(--era-1970s)) 14%,
-      hsl(var(--era-1980s)) 28%,
-      hsl(var(--era-1990s)) 42%,
-      hsl(var(--era-2000s)) 56%,
-      hsl(var(--era-2010s)) 70%,
+      hsl(var(--era-1970s)) 20%,
+      hsl(var(--era-1980s)) 40%,
+      hsl(var(--era-1990s)) 60%,
+      hsl(var(--era-2000s)) 80%,
       hsl(var(--era-2020s)) 100%);
     
     --gradient-surface: linear-gradient(135deg, 
@@ -36,9 +35,9 @@
       hsl(var(--surface-elevated)) 100%);
     
     /* Glassmorphism effects */
-    --glass-bg: #000; /* Solid black background */
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --glass-bg: rgba(238, 68, 102, 0.731);
+    --glass-border: rgba(239, 71, 111, 0.18); /* EF476F border */
+    --glass-shadow: 0 8px 32px rgba(6, 214, 160, 0.15); /* 06D6A0 shadow */
     
     /* Animation timings */
     --animation-fast: 0.2s ease-out;
@@ -56,24 +55,24 @@
     --text-4xl: 2.25rem;
     --text-5xl: 3rem;
 
-    /* Updated shadcn tokens for dark theme */
+    /* Updated shadcn tokens for fun theme */
     --card: var(--surface);
     --card-foreground: var(--foreground);
     --popover: var(--surface-elevated);
     --popover-foreground: var(--foreground);
-    --primary: var(--era-2020s);
+    --primary: var(--era-1960s);
     --primary-foreground: var(--foreground);
     --secondary: var(--surface-elevated);
     --secondary-foreground: var(--foreground);
     --muted: var(--surface);
-    --muted-foreground: 210 20% 65%;
-    --accent: var(--surface-elevated);
+    --muted-foreground: 238 68% 102%; /* 118AB2 */
+    --accent: var(--era-1980s);
     --accent-foreground: var(--foreground);
-    --destructive: 0 84% 60%;
+    --destructive: 348 83% 60%; /* EF476F */
     --destructive-foreground: var(--foreground);
-    --border: 220 15% 20%;
+    --border: 199 77% 38%; /* 118AB2 */
     --input: var(--surface-elevated);
-    --ring: var(--era-2020s);
+    --ring: var(--era-1960s);
     --radius: 0.75rem;
   }
 
@@ -109,6 +108,18 @@
   .era-2000s { background: linear-gradient(135deg, hsl(var(--era-2000s) / 0.2), hsl(var(--era-2000s) / 0.05)); }
   .era-2010s { background: linear-gradient(135deg, hsl(var(--era-2010s) / 0.2), hsl(var(--era-2010s) / 0.05)); }
   .era-2020s { background: linear-gradient(135deg, hsl(var(--era-2020s) / 0.2), hsl(var(--era-2020s) / 0.05)); }
+
+  /* Ensure readable text for yellow backgrounds (e.g., FFBC42) */
+  .bg-era-1980s,
+  .bg-era-2010s {
+    color: #1a237e !important; /* Deep blue text for contrast */
+  }
+
+  /* Optionally, add a utility for all era backgrounds to enforce readable text */
+  .era-1980s,
+  .era-2010s {
+    color: #1a237e !important; /* Deep blue text for contrast */
+  }
 
   /* Timeline animations */
   .timeline-enter {
@@ -151,11 +162,15 @@
   @keyframes fadeInUp {
     0% {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(40px) scale(0.98);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(-4px) scale(1.02);
     }
     100% {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
   }
 
@@ -166,4 +181,14 @@
   .tech-modern { font-size: 1.25rem; font-weight: 500; } /* 2000s */
   .tech-current { font-size: 1rem; font-weight: 400; } /* 2010s */
   .tech-latest { font-size: 0.875rem; font-weight: 300; } /* 2020s */
+}
+
+/* Remove rainbow text for header, use a single accent color */
+.bg-gradient-timeline,
+.bg-gradient-timeline.bg-clip-text,
+.bg-gradient-timeline.text-transparent {
+  background: none !important;
+  color: hsl(var(--era-1960s)) !important; /* Use EF476F as accent */
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
 }
