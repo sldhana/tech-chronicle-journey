@@ -89,18 +89,18 @@ export const technologies: Technology[] = [// 1960s
   { id: 'puppet', name: 'Puppet', year: 2005, decade: '2000s', category: 'Configuration Management', description: 'Declarative system configuration', majorEvent: 'Configuration management becomes essential' },
 
   // 2010s
-  { id: 'nodejs', name: 'Node.js', year: 2009, decade: '2010s', category: 'Runtime', description: 'Server-side JavaScript runtime', majorEvent: 'JavaScript everywhere movement begins' },
+  { id: 'nodejs', name: 'Node.js', year: 2009, decade: '2000s', category: 'Runtime', description: 'Server-side JavaScript runtime', majorEvent: 'JavaScript everywhere movement begins' },
   { id: 'backbone', name: 'Backbone.js', year: 2010, decade: '2010s', category: 'JavaScript Framework', description: 'Lightweight MVC framework', majorEvent: 'Single-page applications gain traction' },
   { id: 'knockout', name: 'Knockout.js', year: 2010, decade: '2010s', category: 'JavaScript Library', description: 'MVVM pattern library', majorEvent: 'Data binding becomes essential in web apps' },
   { id: 'angularjs', name: 'AngularJS', year: 2010, decade: '2010s', category: 'JavaScript Framework', description: 'Single-page application framework', majorEvent: 'Rich web applications become standard' },
   { id: 'ember', name: 'Ember.js', year: 2011, decade: '2010s', category: 'JavaScript Framework', description: 'Ambitious web applications framework', majorEvent: 'Convention-over-configuration gains popularity' },
-  { id: 'underscore', name: 'Underscore.js', year: 2009, decade: '2010s', category: 'JavaScript Library', description: 'Functional programming utilities', majorEvent: 'Functional programming patterns emerge in JS' },
+  { id: 'underscore', name: 'Underscore.js', year: 2009, decade: '2000s', category: 'JavaScript Library', description: 'Functional programming utilities', majorEvent: 'Functional programming patterns emerge in JS' },
   { id: 'lodash', name: 'Lodash', year: 2012, decade: '2010s', category: 'JavaScript Library', description: 'Modern utility library', majorEvent: 'JavaScript utility libraries mature' },
-  { id: 'requirejs', name: 'RequireJS', year: 2009, decade: '2010s', category: 'JavaScript Library', description: 'AMD module loader', majorEvent: 'JavaScript module systems emerge' },
+  { id: 'requirejs', name: 'RequireJS', year: 2009, decade: '2000s', category: 'JavaScript Library', description: 'AMD module loader', majorEvent: 'JavaScript module systems emerge' },
   { id: 'browserify', name: 'Browserify', year: 2011, decade: '2010s', category: 'Build Tool', description: 'Bundle CommonJS modules for browser', majorEvent: 'Node.js modules come to browser' },
   { id: 'd3', name: 'D3.js', year: 2011, decade: '2010s', category: 'JavaScript Library', description: 'Data-driven documents library', majorEvent: 'Data visualization becomes sophisticated' },
   { id: 'handlebars', name: 'Handlebars.js', year: 2010, decade: '2010s', category: 'Template Engine', description: 'Logic-less templating engine', majorEvent: 'Template engines separate logic from presentation' },
-  { id: 'mustache', name: 'Mustache.js', year: 2009, decade: '2010s', category: 'Template Engine', description: 'Logic-less templates', majorEvent: 'Template standardization across languages' },
+  { id: 'mustache', name: 'Mustache.js', year: 2009, decade: '2000s', category: 'Template Engine', description: 'Logic-less templates', majorEvent: 'Template standardization across languages' },
   { id: 'moment', name: 'Moment.js', year: 2011, decade: '2010s', category: 'JavaScript Library', description: 'Date manipulation library', majorEvent: 'Complex date handling becomes common' },
   { id: 'react', name: 'React', year: 2013, decade: '2010s', category: 'JavaScript Library', description: 'Component-based UI library', majorEvent: 'Component architecture revolutionizes frontend' },
   { id: 'angular', name: 'Angular', year: 2016, decade: '2010s', category: 'JavaScript Framework', description: 'Complete rewrite of AngularJS with TypeScript', majorEvent: 'TypeScript adoption accelerates' },
@@ -139,10 +139,10 @@ export const technologies: Technology[] = [// 1960s
   { id: 'grails', name: 'Grails', year: 2006, decade: '2010s', category: 'Groovy Framework', description: 'Convention-over-configuration Groovy framework', majorEvent: 'Alternative JVM languages gain traction' },
   { id: 'ktor', name: 'Ktor', year: 2018, decade: '2010s', category: 'Kotlin Framework', description: 'Asynchronous Kotlin web framework', majorEvent: 'Kotlin adoption accelerates beyond Android' },
   { id: 'pyramid', name: 'Pyramid', year: 2010, decade: '2010s', category: 'Python Framework', description: 'Minimalist Python web framework', majorEvent: 'Python web framework ecosystem matures' },
-  { id: 'bottle', name: 'Bottle', year: 2009, decade: '2010s', category: 'Python Framework', description: 'Micro web framework for Python', majorEvent: 'Single-file frameworks gain popularity' },
+  { id: 'bottle', name: 'Bottle', year: 2009, decade: '2000s', category: 'Python Framework', description: 'Micro web framework for Python', majorEvent: 'Single-file frameworks gain popularity' },
   { id: 'cherrypy', name: 'CherryPy', year: 2002, decade: '2010s', category: 'Python Framework', description: 'Object-oriented HTTP framework', majorEvent: 'Python web servers become more sophisticated' },
-  { id: 'mongodb', name: 'MongoDB', year: 2009, decade: '2010s', category: 'Database', description: 'Document-oriented NoSQL database', majorEvent: 'Big data and NoSQL movement emerges' },
-  { id: 'redis', name: 'Redis', year: 2009, decade: '2010s', category: 'Database', description: 'In-memory data structure store', majorEvent: 'Real-time applications require fast data' },
+  { id: 'mongodb', name: 'MongoDB', year: 2009, decade: '2000s', category: 'Database', description: 'Document-oriented NoSQL database', majorEvent: 'Big data and NoSQL movement emerges' },
+  { id: 'redis', name: 'Redis', year: 2009, decade: '2000s', category: 'Database', description: 'In-memory data structure store', majorEvent: 'Real-time applications require fast data' },
   { id: 'docker', name: 'Docker', year: 2013, decade: '2010s', category: 'Containerization', description: 'Application containerization platform', majorEvent: 'DevOps and continuous deployment mature' },
   { id: 'kubernetes', name: 'Kubernetes', year: 2014, decade: '2010s', category: 'Orchestration', description: 'Container orchestration platform', majorEvent: 'Microservices architecture dominates enterprise' },
   { id: 'ansible', name: 'Ansible', year: 2012, decade: '2010s', category: 'Configuration Management', description: 'Agentless automation platform', majorEvent: 'Simple automation tools gain adoption' },
@@ -156,7 +156,7 @@ export const technologies: Technology[] = [// 1960s
   { id: 'consul', name: 'Consul', year: 2014, decade: '2010s', category: 'Service Discovery', description: 'Service mesh and discovery tool', majorEvent: 'Microservices networking becomes complex' },
   { id: 'etcd', name: 'etcd', year: 2013, decade: '2010s', category: 'Distributed Storage', description: 'Distributed key-value store', majorEvent: 'Distributed systems coordination improves' },
   { id: 'zookeeper', name: 'Apache ZooKeeper', year: 2008, decade: '2010s', category: 'Coordination Service', description: 'Distributed coordination service', majorEvent: 'Distributed application coordination standardizes' },
-  { id: 'mesos', name: 'Apache Mesos', year: 2009, decade: '2010s', category: 'Cluster Management', description: 'Distributed systems kernel', majorEvent: 'Cluster resource management evolves' },
+  { id: 'mesos', name: 'Apache Mesos', year: 2009, decade: '2000s', category: 'Cluster Management', description: 'Distributed systems kernel', majorEvent: 'Cluster resource management evolves' },
   { id: 'marathon', name: 'Marathon', year: 2013, decade: '2010s', category: 'Container Orchestration', description: 'Container orchestration for Mesos', majorEvent: 'Container orchestration options diversify' },
   { id: 'swarm', name: 'Docker Swarm', year: 2014, decade: '2010s', category: 'Container Orchestration', description: 'Native Docker clustering', majorEvent: 'Container orchestration becomes competitive' },
   { id: 'nomad', name: 'HashiCorp Nomad', year: 2015, decade: '2010s', category: 'Orchestration', description: 'Flexible workload orchestrator', majorEvent: 'Orchestration beyond containers emerges' },
@@ -165,12 +165,12 @@ export const technologies: Technology[] = [// 1960s
   { id: 'grafana', name: 'Grafana', year: 2014, decade: '2010s', category: 'Monitoring', description: 'Analytics and monitoring platform', majorEvent: 'Observability becomes critical in microservices' },
   { id: 'elk', name: 'ELK Stack', year: 2010, decade: '2010s', category: 'Logging', description: 'Elasticsearch, Logstash, Kibana', majorEvent: 'Centralized logging becomes standard' },
   { id: 'fluentd', name: 'Fluentd', year: 2011, decade: '2010s', category: 'Logging', description: 'Unified logging layer', majorEvent: 'Log aggregation solutions mature' },
-  { id: 'logstash', name: 'Logstash', year: 2009, decade: '2010s', category: 'Logging', description: 'Server-side data processing pipeline', majorEvent: 'Log processing pipelines emerge' },
+  { id: 'logstash', name: 'Logstash', year: 2009, decade: '2000s', category: 'Logging', description: 'Server-side data processing pipeline', majorEvent: 'Log processing pipelines emerge' },
   { id: 'kibana', name: 'Kibana', year: 2010, decade: '2010s', category: 'Data Visualization', description: 'Elasticsearch data visualization', majorEvent: 'Log visualization becomes sophisticated' },
   { id: 'saltstack', name: 'SaltStack', year: 2011, decade: '2010s', category: 'Configuration Management', description: 'Event-driven automation platform', majorEvent: 'Real-time infrastructure management emerges' },
   { id: 'swift', name: 'Swift', year: 2014, decade: '2010s', category: 'Programming Language', description: 'Apple\'s modern programming language', majorEvent: 'Mobile development becomes critical' },
   { id: 'kotlin', name: 'Kotlin', year: 2011, decade: '2010s', category: 'Programming Language', description: 'Modern JVM programming language', majorEvent: 'Android development evolves rapidly' },
-  { id: 'go', name: 'Go', year: 2009, decade: '2010s', category: 'Programming Language', description: 'Google\'s systems programming language', majorEvent: 'Cloud infrastructure scales massively' },
+  { id: 'go', name: 'Go', year: 2009, decade: '2000s', category: 'Programming Language', description: 'Google\'s systems programming language', majorEvent: 'Cloud infrastructure scales massively' },
   { id: 'rust', name: 'Rust', year: 2010, decade: '2010s', category: 'Programming Language', description: 'Memory-safe systems programming language', majorEvent: 'Security and performance become paramount' },
   { id: 'elasticsearch', name: 'Elasticsearch', year: 2010, decade: '2010s', category: 'Search Engine', description: 'Distributed search and analytics engine', majorEvent: 'Big data analytics becomes mainstream' },
   { id: 'express', name: 'Express.js', year: 2010, decade: '2010s', category: 'Web Framework', description: 'Minimalist Node.js web framework', majorEvent: 'API-first development emerges' },
@@ -437,4 +437,34 @@ export const getTechSizeClass = (year: number) => {
   if (year < 2000) return 'tech-modern';
   if (year < 2010) return 'tech-current';
   return 'tech-latest';
+};
+
+export const getHistoricalEventForYear = (decade: string, year: number) => {
+  // Some technologies may have a year that doesn't match the decade string exactly (e.g., 2009 in '2010s')
+  // Fix: Find the correct decade for the year if not found in the given decade
+  let events = historicalEvents[decade] || [];
+  let event = events.find(e => e.year === year);
+  if (!event) {
+    // Try to find the correct decade for the year
+    const decadeKey = Object.keys(historicalEvents).find(d => {
+      const start = parseInt(d.slice(0, 4), 10);
+      return year >= start && year < start + 10;
+    });
+    if (decadeKey) {
+      events = historicalEvents[decadeKey] || [];
+      event = events.find(e => e.year === year) || null;
+    }
+  }
+  return event || null;
+};
+
+export const getDecadeForYear = (year: number): string | null => {
+  const decades = Object.keys(historicalEvents);
+  for (const decade of decades) {
+    const start = parseInt(decade.slice(0, 4), 10);
+    if (year >= start && year < start + 10) {
+      return decade;
+    }
+  }
+  return null;
 };
